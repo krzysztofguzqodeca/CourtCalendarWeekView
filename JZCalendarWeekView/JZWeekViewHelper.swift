@@ -112,6 +112,22 @@ open class JZWeekViewHelper {
         }
         return resultEvents
     }
+    
+    open class func getIntraEventsBySectionInt<T: JZBaseEvent>(originalEvents: [T]) -> [Int: [T]] {
+        var resultEvents = [Int: [T]]()
+        for event in originalEvents {
+            let eventSection = event.section
+            
+            if resultEvents[eventSection] == nil {
+                resultEvents[eventSection] = [T]()
+            }
+            if let copiedEvent = event.copy() as? T {
+                resultEvents[eventSection]?.append(copiedEvent)
+            }
+            
+        }
+        return resultEvents
+    }
 
     // This function has to be updated once new devices coming
     private static var hasNotch: Bool = {
