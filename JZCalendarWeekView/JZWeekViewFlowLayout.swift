@@ -33,11 +33,11 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     open var defaultHourHeight: CGFloat { return 50 }
     open var defaultRowHeaderWidth: CGFloat { return 42 }
     open var defaultColumnHeaderHeight: CGFloat { return 44 }
-    open var defaultHourGridDivision: JZHourGridDivision { return .noneDiv }
+    open var defaultHourGridDivision: JZHourGridDivision { return .minutes_30 }
     // You can change following constants
     open var defaultGridThickness: CGFloat { return 0.5 }
     open var defaultCurrentTimeLineHeight: CGFloat { return 10 }
-    open var defaultAllDayOneLineHeight: CGFloat { return 30 }
+    open var defaultAllDayOneLineHeight: CGFloat { return 0 }
     /// Margin for the flowLayout in collectionView
     open var contentsMargin: UIEdgeInsets { return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0) }
     open var itemMargin: UIEdgeInsets { return UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1) }
