@@ -16,6 +16,7 @@ public protocol JZLongPressViewDelegate: class {
     ///   - weekView: current long pressed JZLongPressWeekView
     ///   - startDate: the startDate of the event when gesture ends
     func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date)
+    func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date, section: Int)
 
     /// When Move long press gesture ends, this function will be called.
     /// You should handle what should be done after editing (moving) a existed event.
@@ -56,6 +57,7 @@ extension JZLongPressViewDelegate {
     // Keep them optional
     public func weekView(_ weekView: JZLongPressWeekView, longPressType: JZLongPressWeekView.LongPressType, didCancelLongPressAt startDate: Date) {}
     public func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date) {}
+    public func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date, section: Int) {}
     public func weekView(_ weekView: JZLongPressWeekView, editingEvent: JZBaseEvent, didEndMoveLongPressAt startDate: Date) {}
 }
 
@@ -398,7 +400,7 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
         let pointInSelfView = gestureRecognizer.location(in: self)
         /// Used for get startDate of longPressView
         let pointInCollectionView = gestureRecognizer.location(in: collectionView)
-
+        
         let state = gestureRecognizer.state
         var currentMovingCell: UICollectionViewCell!
 
@@ -463,7 +465,8 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
 
             self.longPressView.removeFromSuperview()
             if currentLongPressType == .addNew {
-                longPressDelegate?.weekView(self, didEndAddNewLongPressAt: longPressViewStartDate)
+                let section = getSectionForPointX(pointInCollectionView.x)
+                longPressDelegate?.weekView(self, didEndAddNewLongPressAt: longPressViewStartDate, section: section)
             } else if currentLongPressType == .move {
                 longPressDelegate?.weekView(self, editingEvent: currentEditingInfo.event, didEndMoveLongPressAt: longPressViewStartDate)
             }
