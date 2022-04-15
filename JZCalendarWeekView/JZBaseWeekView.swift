@@ -64,6 +64,9 @@ open class JZBaseWeekView: UIView {
             }
         }
     }
+    
+    public var allEventsBySectionInt: [Int: [JZBaseEvent]]!
+    public var notAllDayEventsBySectionInt = [Int: [JZBaseEvent]]()
     public var notAllDayEventsBySection = [Date: [JZAllDayEvent]]()
     public var allDayEventsBySection = [Date: [JZAllDayEvent]]()
 
@@ -72,7 +75,7 @@ open class JZBaseWeekView: UIView {
         return frame.width - flowLayout.rowHeaderWidth - flowLayout.contentsMargin.left - flowLayout.contentsMargin.right
     }
     private var isFirstAppear: Bool = true
-    internal var isAllDaySupported: Bool!
+    internal var isAllDaySupported: Bool = false
     internal var scrollDirection: ScrollDirection?
 
     // Scrollable Range
@@ -158,7 +161,7 @@ open class JZBaseWeekView: UIView {
     */
     open func setupCalendar(numOfDays: Int,
                             setDate: Date,
-                            allEvents: [Date: [JZBaseEvent]],
+                            allEvents: [Int: [JZBaseEvent]],
                             scrollType: JZScrollType = .pageScroll,
                             firstDayOfWeek: DayOfWeek? = nil,
                             currentTimelineType: JZCurrentTimelineType = .section,
@@ -166,12 +169,8 @@ open class JZBaseWeekView: UIView {
                             scrollableRange: (startDate: Date?, endDate: Date?)? = (nil, nil)) {
 
         self.numOfDays = numOfDays
-        if numOfDays == 7 {
-            updateFirstDayOfWeek(setDate: setDate, firstDayOfWeek: firstDayOfWeek ?? .Sunday)
-        } else {
-            self.initDate = setDate.startOfDay.add(component: .day, value: -numOfDays)
-        }
-        self.allEventsBySection = allEvents
+        self.initDate = setDate.startOfDay.add(component: .day, value: 0)
+        self.allEventsBySectionInt = allEvents
         self.scrollType = scrollType
         self.scrollableRange.startDate = scrollableRange?.startDate
         self.scrollableRange.endDate = scrollableRange?.endDate
@@ -243,14 +242,12 @@ open class JZBaseWeekView: UIView {
     /// Reload the collectionView and flowLayout
     /// - Parameters:
     ///   - reloadEvents: If provided new events, current events will be reloaded. Default value is nil.
-    open func forceReload(reloadEvents: [Date: [JZBaseEvent]]? = nil) {
-        if let events = reloadEvents { self.allEventsBySection = events }
+    open func forceReload(reloadEvents: [Int: [JZBaseEvent]]? = nil) {
+        if let events = reloadEvents { self.allEventsBySectionInt = events }
 
         DispatchQueue.main.async { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.updateAllDayBar(isScrolling: false)
-            // initial day is one page before the settle day
-            strongSelf.collectionView.setContentOffsetWithoutDelegate(CGPoint(x: strongSelf.contentViewWidth, y: strongSelf.getYOffset()), animated: false)
             strongSelf.flowLayout.invalidateLayoutCache()
             strongSelf.collectionView.reloadData()
             strongSelf.setHorizontalEdgesOffsetX()
@@ -282,7 +279,7 @@ open class JZBaseWeekView: UIView {
     /// - Parameters:
     ///    - date: this date is the current date in one-day view rather than initDate
     open func updateWeekView(to date: Date) {
-        self.initDate = date.startOfDay.add(component: .day, value: -numOfDays)
+        self.initDate = date.startOfDay.add(component: .day, value: 0)
         DispatchQueue.main.async { [unowned self] in
             self.layoutSubviews()
             self.forceReload()
@@ -308,8 +305,7 @@ open class JZBaseWeekView: UIView {
     ///
     /// - Parameter indexPath: The indexPath of an item in collectionView
     open func getCurrentEvent(with indexPath: IndexPath) -> JZBaseEvent? {
-        let date = flowLayout.dateForColumnHeader(at: indexPath)
-        return isAllDaySupported ? notAllDayEventsBySection[date]?[indexPath.row] : allEventsBySection[date]?[indexPath.row]
+        return allEventsBySectionInt[indexPath.section]?[indexPath.row]
     }
 
     open func getDatesInCurrentPage(isScrolling: Bool) -> [Date] {
@@ -337,7 +333,7 @@ open class JZBaseWeekView: UIView {
         **Must override viewWillTransition in the ViewController and call this function**
     */
     open func refreshWeekView() {
-        updateWeekView(to: self.initDate.add(component: .day, value: numOfDays))
+        //updateWeekView(to: self.initDate.add(component: .day, value: numOfDays))
     }
 
     open func updateFirstDayOfWeek(setDate: Date, firstDayOfWeek: DayOfWeek?) {
@@ -345,7 +341,6 @@ open class JZBaseWeekView: UIView {
         let setDayOfWeek = setDate.getDayOfWeek()
         var diff = setDayOfWeek.rawValue - firstDayOfWeek.rawValue
         if diff < 0 { diff = 7 - abs(diff) }
-        self.initDate = setDate.startOfDay.add(component: .day, value: -numOfDays - diff)
         self.firstDayOfWeek = firstDayOfWeek
     }
 
@@ -354,7 +349,7 @@ open class JZBaseWeekView: UIView {
     /// Get Date for specific section.
     /// The 0 section start from previous page, which means the first date section in current page should be **numOfDays**.
     open func getDateForSection(_ section: Int) -> Date {
-        return Calendar.current.date(byAdding: .day, value: section, to: initDate)!
+        return initDate
     }
 
     /**
@@ -400,6 +395,14 @@ open class JZBaseWeekView: UIView {
         let section = Int(adjustedX / flowLayout.sectionWidth)
         return getDateForSection(section)
     }
+    
+    open func getSectionForPointX(_ xCollectionView: CGFloat) -> Int {
+        // RowHeader(horizontal UICollectionReusableView) should be considered in gesture point
+        // Margin area for point X can also get actual date, because it is always the middle view unlike point Y
+        let adjustedX = xCollectionView - flowLayout.rowHeaderWidth - flowLayout.contentsMargin.left
+        let section = Int(adjustedX / flowLayout.sectionWidth)
+        return section
+    }
 
     /**
      Get time excluding date from **gesture point in collectionView only** rather than collectionView contentOffset
@@ -437,10 +440,8 @@ extension JZBaseWeekView: UICollectionViewDataSource {
     }
 
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let date = flowLayout.dateForColumnHeader(at: IndexPath(item: 0, section: section))
-
-        if let events = allEventsBySection[date] {
-            return isAllDaySupported ? notAllDayEventsBySection[date]!.count : events.count
+        if let events = allEventsBySectionInt[section] {
+            return events.count
         } else {
             return 0
         }
@@ -587,9 +588,6 @@ extension JZBaseWeekView: UICollectionViewDelegate, UICollectionViewDelegateFlow
 
     // sectionScroll load page
     private func loadPageSectionScroll() {
-        let currentDate = getDateForContentOffsetX(collectionView.contentOffset.x)
-        let currentInitDate = currentDate.add(component: .day, value: -numOfDays)
-        self.initDate = currentInitDate
         self.forceReload()
     }
 
@@ -609,8 +607,6 @@ extension JZBaseWeekView: UICollectionViewDelegate, UICollectionViewDelegateFlow
     }
 
     private func loadNextOrPrevPage(isNext: Bool) {
-        let addValue = isNext ? numOfDays : -numOfDays
-        self.initDate = self.initDate.add(component: .day, value: addValue!)
         self.forceReload()
     }
 
@@ -708,12 +704,15 @@ extension JZBaseWeekView: WeekViewFlowLayoutDelegate {
     public func collectionView(_ collectionView: UICollectionView, layout: JZWeekViewFlowLayout, dayForSection section: Int) -> Date {
         return getDateForSection(section)
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout: JZWeekViewFlowLayout, courtForSection section: Int) -> Date {
+        return getDateForSection(section)
+    }
 
     public func collectionView(_ collectionView: UICollectionView, layout: JZWeekViewFlowLayout, startTimeForItemAtIndexPath indexPath: IndexPath) -> Date {
-        let date = flowLayout.dateForColumnHeader(at: indexPath)
 
-        if let events = allEventsBySection[date] {
-            let event = isAllDaySupported ? notAllDayEventsBySection[date]![indexPath.item] : events[indexPath.item]
+        if let events = allEventsBySectionInt[indexPath.section] {
+            let event = events[indexPath.item]
             return event.intraStartDate
         } else {
             fatalError("Cannot get events")
@@ -721,10 +720,9 @@ extension JZBaseWeekView: WeekViewFlowLayoutDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout: JZWeekViewFlowLayout, endTimeForItemAtIndexPath indexPath: IndexPath) -> Date {
-        let date = flowLayout.dateForColumnHeader(at: indexPath)
 
-        if let events = allEventsBySection[date] {
-            let event = isAllDaySupported ? notAllDayEventsBySection[date]![indexPath.item] : events[indexPath.item]
+        if let events = allEventsBySectionInt[indexPath.section] {
+            let event = events[indexPath.item]
             return event.intraEndDate
         } else {
             fatalError("Cannot get events")
