@@ -436,7 +436,7 @@ extension JZBaseWeekView: UICollectionViewDataSource {
 
     // In order to keep efficiency, only 3 pages exist at the same time, previous-current-next
     open func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3 * numOfDays
+        return numOfDays
     }
 
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
