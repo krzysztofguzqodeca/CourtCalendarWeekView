@@ -125,6 +125,7 @@ open class JZBaseWeekView: UIView {
     open override func layoutSubviews() {
         super.layoutSubviews()
 
+        if(numOfDays == nil) {numOfDays = 0}
         flowLayout.sectionWidth = getSectionWidth()
     }
 
@@ -460,7 +461,9 @@ extension JZBaseWeekView: UICollectionViewDataSource {
         switch kind {
         case JZSupplementaryViewKinds.columnHeader:
             if let columnHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kind, for: indexPath) as? JZColumnHeader {
-                columnHeader.updateView(date: flowLayout.dateForColumnHeader(at: indexPath))
+                let court = allSections?[indexPath.section]
+
+                columnHeader.updateColumnHeaderView(court: court)
                 view = columnHeader
             }
         case JZSupplementaryViewKinds.rowHeader:

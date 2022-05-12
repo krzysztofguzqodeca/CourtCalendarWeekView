@@ -55,4 +55,9 @@ open class JZColumnHeader: UICollectionReusableView {
         }
     }
 
+    public func updateColumnHeaderView(court: CourtItem?) {
+        guard let court = court else { return }
+        lblDay.text = "Court: \(court.shortName ?? "")"
+    }
+
 }
