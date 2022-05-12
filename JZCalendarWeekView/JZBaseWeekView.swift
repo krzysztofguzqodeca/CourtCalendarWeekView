@@ -66,6 +66,7 @@ open class JZBaseWeekView: UIView {
     }
     
     public var allEventsBySectionInt: [Int: [JZBaseEvent]]!
+    public var allSections: [CourtItem]?
     public var notAllDayEventsBySectionInt = [Int: [JZBaseEvent]]()
     public var notAllDayEventsBySection = [Date: [JZAllDayEvent]]()
     public var allDayEventsBySection = [Date: [JZAllDayEvent]]()
@@ -162,6 +163,7 @@ open class JZBaseWeekView: UIView {
     open func setupCalendar(numOfDays: Int,
                             setDate: Date,
                             allEvents: [Int: [JZBaseEvent]],
+                            allSections: [CourtItem]?,
                             scrollType: JZScrollType = .pageScroll,
                             firstDayOfWeek: DayOfWeek? = nil,
                             currentTimelineType: JZCurrentTimelineType = .section,
@@ -171,6 +173,7 @@ open class JZBaseWeekView: UIView {
         self.numOfDays = numOfDays
         self.initDate = setDate.startOfDay.add(component: .day, value: 0)
         self.allEventsBySectionInt = allEvents
+        self.allSections = allSections
         self.scrollType = scrollType
         self.scrollableRange.startDate = scrollableRange?.startDate
         self.scrollableRange.endDate = scrollableRange?.endDate
