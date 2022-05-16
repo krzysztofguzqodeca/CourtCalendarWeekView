@@ -23,22 +23,23 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
     // UI params
     var hourHeight: CGFloat!
-    var rowHeaderWidth: CGFloat = 50
+    var rowHeaderWidth: CGFloat = 100
     var columnHeaderHeight: CGFloat!
-    public var sectionWidth: CGFloat = 161
+    public var sectionWidth: CGFloat = 164
     public var hourGridDivision: JZHourGridDivision!
     var minuteHeight: CGFloat { return hourHeight / 60 }
 
-    open var defaultHourHeight: CGFloat { return 65 }
-    open var defaultRowHeaderWidth: CGFloat { return 50 }
+    open var defaultHourHeight: CGFloat { return 130 }
+    open var defaultRowHeaderWidth: CGFloat { return 100 }
     open var defaultColumnHeaderHeight: CGFloat { return 66 }
     open var defaultHourGridDivision: JZHourGridDivision { return .minutes_30 }
     // You can change following constants
     open var defaultGridThickness: CGFloat { return 0.5 }
+    open var defaultGridVerticalThickness: CGFloat { return 8 }
     open var defaultCurrentTimeLineHeight: CGFloat { return 10 }
     /// Margin for the flowLayout in collectionView
     open var contentsMargin: UIEdgeInsets { return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0) }
-    open var itemMargin: UIEdgeInsets { return UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1) }
+    open var itemMargin: UIEdgeInsets { return UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 1) }
     /// weekview contentSize height
     open var maxSectionHeight: CGFloat {
         let height = hourHeight * 24 // statement too long for Swift 5 compiler
@@ -340,8 +341,8 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
         (attributes, verticalGridlineAttributes) = layoutAttributesForDecorationView(at: IndexPath(item: 0, section: section),
                                                                                      ofKind: JZDecorationViewKinds.verticalGridline,
                                                                                      withItemCache: verticalGridlineAttributes)
-        attributes.frame = CGRect(x: (sectionX - defaultGridThickness / 2.0).toDecimal1Value(), y: calendarGridMinY,
-                                  width: defaultGridThickness, height: sectionHeight)
+        attributes.frame = CGRect(x: (sectionX - defaultGridThickness / 2.0).toDecimal1Value(), y: calendarGridMinY-10,
+                                  width: defaultGridVerticalThickness, height: sectionHeight+50)
         attributes.zIndex = zIndexForElementKind(JZDecorationViewKinds.verticalGridline)
     }
 
@@ -788,7 +789,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
         case JZDecorationViewKinds.horizontalGridline:
             return minBackgroundZ + 2
         case JZDecorationViewKinds.verticalGridline:
-            return minBackgroundZ + 1
+            return minBackgroundZ + 10
         default:
             return minCellZ
         }

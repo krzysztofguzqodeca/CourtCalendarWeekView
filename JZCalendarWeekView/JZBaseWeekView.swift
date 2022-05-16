@@ -58,7 +58,6 @@ open class JZBaseWeekView: UIView {
     public var firstDayOfWeek: DayOfWeek?
     public var allEventsBySection: [Date: [JZBaseEvent]]!
     
-    
     public var allEventsBySectionInt: [Int: [JZBaseEvent]]!
     public var allSections: [CourtItem]?
     public var notAllDayEventsBySectionInt = [Int: [JZBaseEvent]]()
@@ -119,7 +118,7 @@ open class JZBaseWeekView: UIView {
 
         if(numOfDays == nil) {numOfDays = 0}
         flowLayout.sectionWidth = 161 //getSectionWidth()
-        flowLayout.rowHeaderWidth = 60
+        flowLayout.rowHeaderWidth = 40
 
     }
 
