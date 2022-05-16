@@ -23,12 +23,17 @@ open class JZCurrentTimelineSection: UICollectionReusableView {
     open func setupUI() {
         self.addSubviews([halfBallView, lineView])
         halfBallView.setAnchorCenterVerticallyTo(view: self, widthAnchor: halfBallSize, heightAnchor: halfBallSize, leadingAnchor: (leadingAnchor, 0))
-        lineView.setAnchorCenterVerticallyTo(view: self, heightAnchor: 1, leadingAnchor: (halfBallView.trailingAnchor, 0), trailingAnchor: (trailingAnchor, 0))
+        lineView.setAnchorCenterVerticallyTo(view: self, heightAnchor: 1, leadingAnchor: (leadingAnchor, 0), trailingAnchor: (trailingAnchor, 0))
 
         halfBallView.backgroundColor = JZWeekViewColors.today
         halfBallView.layer.cornerRadius = halfBallSize/2
+        halfBallView.isHidden = true
         lineView.backgroundColor = JZWeekViewColors.today
         self.clipsToBounds = true
+    }
+    
+    open func updateView(needShowBallView: Bool) {
+        halfBallView.isHidden = !needShowBallView
     }
 
     required public init?(coder aDecoder: NSCoder) {

@@ -482,6 +482,9 @@ extension JZBaseWeekView: UICollectionViewDataSource {
                 }
             } else {
                 if let currentTimeline = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kind, for: indexPath) as? JZCurrentTimelineSection {
+                    
+                    let isFirstSection = indexPath.section == 0
+                    currentTimeline.updateView(needShowBallView: isFirstSection)
                     view = getSectionTypeCurrentTimeline(timeline: currentTimeline, indexPath: indexPath)
                 }
             }
