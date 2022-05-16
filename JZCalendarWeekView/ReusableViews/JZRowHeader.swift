@@ -26,14 +26,21 @@ open class JZRowHeader: UICollectionReusableView {
         // If you want to customise the RowHeader, please keep the similar contraints with this one (vertically center and a value to trailing anchor)
         // If you want to change rowHeaderWidth and font size, you can change the trailing value to make it horizontally center in normal state, but keep the trailing anchor
         lblTime.setAnchorCenterVerticallyTo(view: self, trailingAnchor: (self.trailingAnchor, -5))
+        lblTime.setAnchorCenterVerticallyTo(view: self, leadingAnchor: (self.leadingAnchor, 10))
+        //lblTime.setAnchorConstraintsEqualTo(topAnchor: (self.topAnchor, 15))
+
     }
 
     open func setupBasic() {
         // Hide all content when colum header height equals 0
         self.clipsToBounds = true
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.amSymbol = "am"
+        dateFormatter.pmSymbol = "pm"
         lblTime.textColor = JZWeekViewColors.rowHeaderTime
-        lblTime.font = UIFont.systemFont(ofSize: 12)
+        lblTime.numberOfLines = 2
+        lblTime.textAlignment = .center
+        lblTime.font = UIFont.boldSystemFont(ofSize: 12)
     }
 
     public func updateView(date: Date) {

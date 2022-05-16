@@ -12,8 +12,7 @@ open class JZRowHeaderBackground: UICollectionReusableView {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.white
-
+        backgroundColor = JZWeekViewColors.columnHeaderBackgroundColor
     }
 
     required public init?(coder aDecoder: NSCoder) {

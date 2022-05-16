@@ -19,7 +19,7 @@ class LongPressViewController: UIViewController {
 
         setupBasic()
         setupCalendarView()
-        setupNaviBar()
+        //setupNaviBar()
     }
 
     // Support device orientation change
@@ -33,6 +33,7 @@ class LongPressViewController: UIViewController {
         calendarWeekView.setupCalendar(numOfDays: 3,
                                        setDate: Date(),
                                        allEvents: viewModel.eventsBySectionInt,
+                                       allSections: [],
                                        scrollType: .pageScroll,
                                        scrollableRange: (nil, nil))
         
@@ -57,8 +58,8 @@ extension LongPressViewController: JZBaseViewDelegate {
 extension LongPressViewController: JZLongPressViewDelegate, JZLongPressViewDataSource {
 
     func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date, section: Int) {
-        let newEvent = AllDayEvent(id: UUID().uuidString, title: "New Event", startDate: startDate, endDate: startDate.add(component: .hour, value: weekView.addNewDurationMins/60),
-                                   location: "Melbourne", isAllDay: false, section: section)
+        let newEvent = AllDayEvent(id: UUID().uuidString, title: "New Booking", startDate: startDate, endDate: startDate.add(component: .hour, value: weekView.addNewDurationMins/60),
+                                   location: "Court \(section + 1)", isAllDay: false, section: section)
 
         viewModel.events.append(newEvent)
         viewModel.eventsBySectionInt = JZWeekViewHelper.getIntraEventsBySectionInt(originalEvents: viewModel.events)

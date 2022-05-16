@@ -81,15 +81,16 @@ class ExampleOptionsViewController: UIViewController {
             let vc: UIViewController
             switch viewType {
             case .defaultView:
-                vc = mainStoryboard.instantiateViewController(withIdentifier: DefaultViewController.className)
-                (vc as? DefaultViewController)?.viewModel.currentSelectedData = selectedData
+                vc = mainStoryboard.instantiateViewController(withIdentifier: LongPressViewController.className)
+                (vc as? LongPressViewController)?.viewModel.currentSelectedData = selectedData
             case .customView:
-                vc = mainStoryboard.instantiateViewController(withIdentifier: CustomViewController.className)
-                (vc as? CustomViewController)?.viewModel.currentSelectedData = selectedData
+                vc = mainStoryboard.instantiateViewController(withIdentifier: LongPressViewController.className)
+                (vc as? LongPressViewController)?.viewModel.currentSelectedData = selectedData
             case .longPressView:
                 vc = mainStoryboard.instantiateViewController(withIdentifier: LongPressViewController.className)
                 (vc as? LongPressViewController)?.viewModel.currentSelectedData = selectedData
             }
+            
             (UIApplication.shared.keyWindow?.rootViewController as? UINavigationController)?.viewControllers = [vc]
             self.dismiss(animated: true, completion: nil)
             return

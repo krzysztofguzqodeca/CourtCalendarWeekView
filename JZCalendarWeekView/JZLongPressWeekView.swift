@@ -124,7 +124,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
 
     /// The most top Y in the collectionView that you want longPress gesture enable.
     /// If you customise some decoration and supplementry views on top, **must** override this variable
-    open var longPressTopMarginY: CGFloat { return flowLayout.columnHeaderHeight + flowLayout.allDayHeaderHeight }
+    open var longPressTopMarginY: CGFloat { return flowLayout.columnHeaderHeight }
     /// The most bottom Y in the collectionView that you want longPress gesture enable.
     /// If you customise some decoration and supplementry views on bottom, **must** override this variable
     open var longPressBottomMarginY: CGFloat { return frame.height }
@@ -234,7 +234,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
             switch scrollType! {
             case .sectionScroll:
                 let scrollSections: CGFloat = direction == .left ? -1 : 1
-                contentOffsetX = currentOffset.x - flowLayout.sectionWidth! * scrollSections
+                contentOffsetX = currentOffset.x - flowLayout.sectionWidth * scrollSections
             case .pageScroll:
                 contentOffsetX = direction == .left ? contentViewWidth * 2 : 0
             }

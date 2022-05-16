@@ -36,7 +36,7 @@ open class JZColumnHeader: UICollectionReusableView {
         stackView.setAnchorConstraintsEqualTo(centerXAnchor: centerXAnchor, centerYAnchor: centerYAnchor)
         lblDay.textAlignment = .center
         lblWeekday.textAlignment = .center
-        lblDay.font = UIFont.systemFont(ofSize: 17)
+        lblDay.font = UIFont.boldSystemFont(ofSize: 13)
         lblWeekday.font = UIFont.systemFont(ofSize: 12)
     }
 
@@ -57,7 +57,8 @@ open class JZColumnHeader: UICollectionReusableView {
 
     public func updateColumnHeaderView(court: CourtItem?) {
         guard let court = court else { return }
-        lblDay.text = "Court: \(court.shortName ?? "")"
+        lblDay.text = "Court: \(court.shortName ?? "") \n"
+        lblDay.textColor = UIColor.white
     }
 
 }

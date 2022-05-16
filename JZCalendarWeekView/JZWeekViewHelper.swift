@@ -11,7 +11,6 @@ public enum JZSupplementaryViewKinds {
     public static let columnHeader = JZColumnHeader.className
     public static let rowHeader = JZRowHeader.className
     public static let cornerHeader = JZCornerHeader.className
-    public static let allDayHeader = JZAllDayHeader.className
     public static let eventCell = "eventCell"
     public static let currentTimeline = "currentTimeline"
 }
@@ -19,8 +18,6 @@ public enum JZSupplementaryViewKinds {
 public enum JZDecorationViewKinds {
     public static let columnHeaderBackground = JZColumnHeaderBackground.className
     public static let rowHeaderBackground = JZRowHeaderBackground.className
-    public static let allDayHeaderBackground = JZAllDayHeaderBackground.className
-    public static let allDayCorner = JZAllDayCorner.className
     public static let verticalGridline = "VerticalGridline"
     public static let horizontalGridline = "HorizontalGridline"
 }
@@ -150,12 +147,12 @@ open class JZWeekViewHelper {
     ///   - size: viewWillTransition to size
     ///   - weekView: the JZWeekView
     open class func viewTransitionHandler(to size: CGSize, weekView: JZBaseWeekView, needRefresh: Bool = true) {
-        if hasNotch {
-            let flowLayout = weekView.flowLayout!
-            // Not differentiate the left and right because of willTransition cannot get the following UIDeviceOrientation
-            let isLandscape = size.width > size.height
-            flowLayout.rowHeaderWidth = isLandscape ? flowLayout.defaultRowHeaderWidth + CGFloat(32) : flowLayout.defaultRowHeaderWidth
-        }
+//        if hasNotch {
+//            let flowLayout = weekView.flowLayout!
+//            // Not differentiate the left and right because of willTransition cannot get the following UIDeviceOrientation
+//            let isLandscape = size.width > size.height
+//            flowLayout.rowHeaderWidth = isLandscape ? flowLayout.defaultRowHeaderWidth + CGFloat(32) : flowLayout.defaultRowHeaderWidth
+//        }
         if needRefresh {
             weekView.refreshWeekView()
         }

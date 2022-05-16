@@ -23,28 +23,26 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
     // UI params
     var hourHeight: CGFloat!
-    var rowHeaderWidth: CGFloat!
+    var rowHeaderWidth: CGFloat = 50
     var columnHeaderHeight: CGFloat!
-    var allDayHeaderHeight: CGFloat = 0
-    public var sectionWidth: CGFloat!
+    public var sectionWidth: CGFloat = 161
     public var hourGridDivision: JZHourGridDivision!
     var minuteHeight: CGFloat { return hourHeight / 60 }
 
-    open var defaultHourHeight: CGFloat { return 50 }
-    open var defaultRowHeaderWidth: CGFloat { return 42 }
-    open var defaultColumnHeaderHeight: CGFloat { return 44 }
+    open var defaultHourHeight: CGFloat { return 65 }
+    open var defaultRowHeaderWidth: CGFloat { return 50 }
+    open var defaultColumnHeaderHeight: CGFloat { return 66 }
     open var defaultHourGridDivision: JZHourGridDivision { return .minutes_30 }
     // You can change following constants
     open var defaultGridThickness: CGFloat { return 0.5 }
     open var defaultCurrentTimeLineHeight: CGFloat { return 10 }
-    open var defaultAllDayOneLineHeight: CGFloat { return 0 }
     /// Margin for the flowLayout in collectionView
     open var contentsMargin: UIEdgeInsets { return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0) }
     open var itemMargin: UIEdgeInsets { return UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1) }
     /// weekview contentSize height
     open var maxSectionHeight: CGFloat {
         let height = hourHeight * 24 // statement too long for Swift 5 compiler
-        return columnHeaderHeight + height + contentsMargin.top + contentsMargin.bottom + allDayHeaderHeight
+        return columnHeaderHeight + height + contentsMargin.top + contentsMargin.bottom
     }
 
     let minOverlayZ = 1000  // Allows for 900 items in a section without z overlap issues
@@ -185,9 +183,9 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             allAttributes.append(contentsOf: currentTimeLineAttributes.values)
             allAttributes.append(contentsOf: itemAttributes.values)
 
-            allAttributes.append(contentsOf: allDayCornerAttributes.values)
-            allAttributes.append(contentsOf: allDayHeaderAttributes.values)
-            allAttributes.append(contentsOf: allDayHeaderBackgroundAttributes.values)
+//            allAttributes.append(contentsOf: allDayCornerAttributes.values)
+//            allAttributes.append(contentsOf: allDayHeaderAttributes.values)
+//            allAttributes.append(contentsOf: allDayHeaderBackgroundAttributes.values)
         }
     }
 
@@ -197,9 +195,9 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
         var attributes =  UICollectionViewLayoutAttributes()
 
         let sectionHeight = (hourHeight * 24).toDecimal1Value()
-        let calendarGridMinY = columnHeaderHeight + contentsMargin.top + allDayHeaderHeight
+        let calendarGridMinY = columnHeaderHeight + contentsMargin.top
         let calendarContentMinX = rowHeaderWidth + contentsMargin.left
-        let calendarContentMinY = columnHeaderHeight + contentsMargin.top + allDayHeaderHeight
+        let calendarContentMinY = columnHeaderHeight + contentsMargin.top
 
         // Current time line
         // TODO: Should improve this method, otherwise every column will display a timeline view
@@ -242,37 +240,37 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
         attributes.zIndex = zIndexForElementKind(JZDecorationViewKinds.rowHeaderBackground)
 
         // All-Day header
-        let allDayHeaderMinY = fmax(collectionView.contentOffset.y + columnHeaderHeight, columnHeaderHeight)
+//        let allDayHeaderMinY = fmax(collectionView.contentOffset.y + columnHeaderHeight, columnHeaderHeight)
+//
+//        sectionIndexes.enumerate(_:) { (section, _) in
+//            let sectionMinX = calendarContentMinX + sectionWidth * CGFloat(section)
+//
+////            (attributes, allDayHeaderAttributes) =
+////                layoutAttributesForSupplemantaryView(at: IndexPath(item: 0, section: section),
+////                                                     ofKind: JZSupplementaryViewKinds.allDayHeader,
+////                                                     withItemCache: allDayHeaderAttributes)
+////            attributes.frame = CGRect(x: sectionMinX, y: allDayHeaderMinY,
+////                                      width: sectionWidth, height: allDayHeaderHeight)
+////            attributes.zIndex = zIndexForElementKind(JZSupplementaryViewKinds.allDayHeader)
+//        }
 
-        sectionIndexes.enumerate(_:) { (section, _) in
-            let sectionMinX = calendarContentMinX + sectionWidth * CGFloat(section)
-
-            (attributes, allDayHeaderAttributes) =
-                layoutAttributesForSupplemantaryView(at: IndexPath(item: 0, section: section),
-                                                     ofKind: JZSupplementaryViewKinds.allDayHeader,
-                                                     withItemCache: allDayHeaderAttributes)
-            attributes.frame = CGRect(x: sectionMinX, y: allDayHeaderMinY,
-                                      width: sectionWidth, height: allDayHeaderHeight)
-            attributes.zIndex = zIndexForElementKind(JZSupplementaryViewKinds.allDayHeader)
-        }
-
-        // All-Day header background
-        (attributes, allDayHeaderBackgroundAttributes) =
-            layoutAttributesForDecorationView(at: IndexPath(item: 0, section: 0),
-                                              ofKind: JZDecorationViewKinds.allDayHeaderBackground,
-                                              withItemCache: allDayHeaderBackgroundAttributes)
-        attributes.frame = CGRect(origin: CGPoint(x: collectionView.contentOffset.x, y: collectionView.contentOffset.y + columnHeaderHeight) ,
-                                  size: CGSize(width: collectionView.frame.width,
-                                               height: allDayHeaderHeight))
-        attributes.zIndex = zIndexForElementKind(JZDecorationViewKinds.allDayHeaderBackground)
-
-        (attributes, allDayCornerAttributes) =
-            layoutAttributesForDecorationView(at: IndexPath(item: 0, section: 0),
-                                              ofKind: JZDecorationViewKinds.allDayCorner,
-                                              withItemCache: allDayCornerAttributes)
-        attributes.frame = CGRect(origin: CGPoint(x: collectionView.contentOffset.x, y: collectionView.contentOffset.y + columnHeaderHeight),
-                                  size: CGSize(width: rowHeaderWidth, height: allDayHeaderHeight))
-        attributes.zIndex = zIndexForElementKind(JZDecorationViewKinds.allDayCorner)
+//        // All-Day header background
+//        (attributes, allDayHeaderBackgroundAttributes) =
+//            layoutAttributesForDecorationView(at: IndexPath(item: 0, section: 0),
+//                                              ofKind: JZDecorationViewKinds.allDayHeaderBackground,
+//                                              withItemCache: allDayHeaderBackgroundAttributes)
+//        attributes.frame = CGRect(origin: CGPoint(x: collectionView.contentOffset.x, y: collectionView.contentOffset.y + columnHeaderHeight) ,
+//                                  size: CGSize(width: collectionView.frame.width,
+//                                               height: allDayHeaderHeight))
+//        attributes.zIndex = zIndexForElementKind(JZDecorationViewKinds.allDayHeaderBackground)
+//
+//        (attributes, allDayCornerAttributes) =
+//            layoutAttributesForDecorationView(at: IndexPath(item: 0, section: 0),
+//                                              ofKind: JZDecorationViewKinds.allDayCorner,
+//                                              withItemCache: allDayCornerAttributes)
+//        attributes.frame = CGRect(origin: CGPoint(x: collectionView.contentOffset.x, y: collectionView.contentOffset.y + columnHeaderHeight),
+//                                  size: CGSize(width: rowHeaderWidth, height: allDayHeaderHeight))
+//        attributes.zIndex = zIndexForElementKind(JZDecorationViewKinds.allDayCorner)
 
         // column header background
         (attributes, columnHeaderBackgroundAttributes) = layoutAttributesForDecorationView(at: IndexPath(item: 0, section: 0),
@@ -400,7 +398,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     }
 
     override open var collectionViewContentSize: CGSize {
-        return CGSize(width: rowHeaderWidth + sectionWidth * CGFloat(collectionView!.numberOfSections),
+        return CGSize(width: rowHeaderWidth + 161 * CGFloat(collectionView!.numberOfSections),
                       height: maxSectionHeight)
     }
 
@@ -417,8 +415,6 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             return rowHeaderAttributes[indexPath]
         case JZSupplementaryViewKinds.cornerHeader:
             return cornerHeaderAttributes[indexPath]
-        case JZSupplementaryViewKinds.allDayHeader:
-            return allDayHeaderAttributes[indexPath]
         case JZSupplementaryViewKinds.currentTimeline:
             return currentTimeLineAttributes[indexPath]
         default:
@@ -436,10 +432,6 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             return rowHeaderBackgroundAttributes[indexPath]
         case JZDecorationViewKinds.columnHeaderBackground:
             return columnHeaderBackgroundAttributes[indexPath]
-        case JZDecorationViewKinds.allDayHeaderBackground:
-            return allDayHeaderBackgroundAttributes[indexPath]
-        case JZDecorationViewKinds.allDayCorner:
-            return allDayCornerAttributes[indexPath]
         default:
             return nil
         }
@@ -783,12 +775,6 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     // MARK: - z index
     open func zIndexForElementKind(_ kind: String) -> Int {
         switch kind {
-        case JZSupplementaryViewKinds.cornerHeader, JZDecorationViewKinds.allDayCorner:
-            return minOverlayZ + 10
-        case JZSupplementaryViewKinds.allDayHeader:
-            return minOverlayZ + 9
-        case JZDecorationViewKinds.allDayHeaderBackground:
-            return minOverlayZ + 8
         case JZSupplementaryViewKinds.rowHeader:
             return minOverlayZ + 7
         case JZDecorationViewKinds.rowHeaderBackground:
