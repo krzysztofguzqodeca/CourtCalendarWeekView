@@ -30,7 +30,7 @@ open class CourtViewBookingClubAvailability: Codable {
 
 // MARK: - Item
 open class CourtItem: Codable {
-    let courtID, name, shortName, itemDescription: String?
+    public let courtID, name, shortName, itemDescription: String?
     let ballMachine: Bool
     let category, tennisCourtType, visibilityOption: CategoryType?
     let openingHours: [ItemOpeningHour]?
