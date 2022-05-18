@@ -19,55 +19,6 @@ open class CourtViewBookingClubAvailability: Codable {
     }
 }
 
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseItem { response in
-//     if let item = response.result.value {
-//       ...
-//     }
-//   }
-
-// MARK: - Item
-open class CourtItem: Codable {
-    public let courtID, name, shortName, itemDescription: String?
-    let ballMachine: Bool
-    let category, tennisCourtType, visibilityOption: CategoryType?
-    let openingHours: [ItemOpeningHour]?
-    let categoryOption: CategoryOption?
-    let availability: [ItemAvailability]?
-
-    enum CodingKeys: String, CodingKey {
-        case courtID = "courtId"
-        case name, shortName
-        case itemDescription = "description"
-        case ballMachine, category, tennisCourtType, visibilityOption, openingHours, categoryOption, availability
-    }
-
-    init(courtID: String, name: String, shortName: String, itemDescription: String, ballMachine: Bool, category: CategoryType, tennisCourtType: CategoryType, visibilityOption: CategoryType, openingHours: [ItemOpeningHour], categoryOption: CategoryOption, availability: [ItemAvailability]) {
-        self.courtID = courtID
-        self.name = name
-        self.shortName = shortName
-        self.itemDescription = itemDescription
-        self.ballMachine = ballMachine
-        self.category = category
-        self.tennisCourtType = tennisCourtType
-        self.visibilityOption = visibilityOption
-        self.openingHours = openingHours
-        self.categoryOption = categoryOption
-        self.availability = availability
-    }
-}
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseAvailability { response in
-//     if let availability = response.result.value {
-//       ...
-//     }
-//   }
-
 // MARK: - Availability
 open class ItemAvailability: Codable {
     let fromInMinutes, toInMinutes: Int?
