@@ -15,7 +15,7 @@ open class JZColumnHeaderBackground: UICollectionReusableView {
         super.init(frame: frame)
         backgroundColor = JZWeekViewColors.columnHeaderBackgroundColor
         self.clipsToBounds = true
-        setupBottomDivider()
+        //setupBottomDivider()
     }
 
     open func setupBottomDivider() {
