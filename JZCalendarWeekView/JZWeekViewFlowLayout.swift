@@ -331,8 +331,8 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             sectionItemAttributes.append(attributes)
         }
 
-        adjustItemsForOverlap(sectionItemAttributes, inSection: section, sectionMinX: sectionX,
-                              currentSectionZ: zIndexForElementKind(JZSupplementaryViewKinds.eventCell))
+//        adjustItemsForOverlap(sectionItemAttributes, inSection: section, sectionMinX: sectionX,
+//                              currentSectionZ: zIndexForElementKind(JZSupplementaryViewKinds.eventCell))
     }
 
     func layoutVerticalGridLinesAttributes(section: Int, sectionX: CGFloat, calendarGridMinY: CGFloat, sectionHeight: CGFloat) {
