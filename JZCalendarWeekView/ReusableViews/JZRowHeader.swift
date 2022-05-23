@@ -34,6 +34,8 @@ open class JZRowHeader: UICollectionReusableView {
     open func setupBasic() {
         // Hide all content when colum header height equals 0
         self.clipsToBounds = true
+        dateFormatter.timeZone = TimeZone(identifier: "America/Los_Angeles")
+        dateFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.dateFormat = "h:mm a"
         dateFormatter.amSymbol = "am"
         dateFormatter.pmSymbol = "pm"

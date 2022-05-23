@@ -63,7 +63,6 @@ open class JZBaseWeekView: UIView {
     public var notAllDayEventsBySectionInt = [Int: [JZBaseEvent]]()
 
     public weak var baseDelegate: JZBaseViewDelegate?
-    //usunąć
     open var contentViewWidth: CGFloat {
         return frame.width - flowLayout.rowHeaderWidth - flowLayout.contentsMargin.left - flowLayout.contentsMargin.right
     } //
@@ -73,6 +72,14 @@ open class JZBaseWeekView: UIView {
 
     // Scrollable Range
     internal var scrollableEdges: (leftX: CGFloat?, rightX: CGFloat?)
+        
+    var calendar: Calendar {
+        guard let timeZone = TimeZone(identifier: "America/Los_Angeles") else { return Calendar.current }
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        calendar.locale = Locale(identifier: "en_US")
+        return calendar
+    }
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -291,7 +298,7 @@ open class JZBaseWeekView: UIView {
     ///
     /// - Parameter time: Only **hour and min** will be calulated for the Y offset
     open func scrollWeekView(to time: Date) {
-        let components = Calendar.current.dateComponents([.hour, .minute], from: time)
+        let components = calendar.dateComponents([.hour, .minute], from: time)
         let hour = CGFloat(components.hour!) + CGFloat(components.minute!) / 60
         let setTimeY = hour * flowLayout.hourHeight + flowLayout.contentsMargin.top
         let maxOffsetY = collectionView.contentSize.height - collectionView.frame.height + flowLayout.columnHeaderHeight + flowLayout.contentsMargin.bottom + flowLayout.contentsMargin.top

@@ -147,35 +147,43 @@ extension UILabel {
 }
 
 extension Date {
+    
+    var calendar: Calendar {
+        guard let timeZone = TimeZone(identifier: "America/Los_Angeles") else { return Calendar.current}
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        calendar.locale = Locale(identifier: "en_US")
+        return calendar
+    }
 
     var isToday: Bool {
-        return Calendar.current.isDateInToday(self)
+        return calendar.isDateInToday(self)
     }
 
     var isYesterday: Bool {
-        return Calendar.current.isDateInYesterday(self)
+        return calendar.isDateInYesterday(self)
     }
 
     var isTomorrow: Bool {
-        return Calendar.current.isDateInTomorrow(self)
+        return calendar.isDateInTomorrow(self)
     }
 
-    static func getCurrentWeekDays(firstDayOfWeek: DayOfWeek?=nil) -> [Date] {
-        var calendar = Calendar.current
-        calendar.firstWeekday = (firstDayOfWeek ?? .Sunday).rawValue
-        let today = calendar.startOfDay(for: Date())
-        let dayOfWeek = calendar.component(.weekday, from: today)
-        let weekdays = calendar.range(of: .weekday, in: .weekOfYear, for: today)!
-        let days = (weekdays.lowerBound ..< weekdays.upperBound).compactMap { calendar.date(byAdding: .day, value: $0 - dayOfWeek, to: today) }
-        return days
-    }
+//    static func getCurrentWeekDays(firstDayOfWeek: DayOfWeek?=nil) -> [Date] {
+//        var calendar = calendar
+//        calendar.firstWeekday = (firstDayOfWeek ?? .Sunday).rawValue
+//        let today = calendar.startOfDay(for: Date())
+//        let dayOfWeek = calendar.component(.weekday, from: today)
+//        let weekdays = calendar.range(of: .weekday, in: .weekOfYear, for: today)!
+//        let days = (weekdays.lowerBound ..< weekdays.upperBound).compactMap { calendar.date(byAdding: .day, value: $0 - dayOfWeek, to: today) }
+//        return days
+//    }
 
     func add(component: Calendar.Component, value: Int) -> Date {
-        return Calendar.current.date(byAdding: component, value: value, to: self)!
+        return calendar.date(byAdding: component, value: value, to: self)!
     }
 
     var startOfDay: Date {
-        return Calendar.current.startOfDay(for: self)
+        return calendar.startOfDay(for: self)
     }
 
     var endOfDay: Date {
@@ -183,7 +191,7 @@ extension Date {
     }
 
     func getDayOfWeek() -> DayOfWeek {
-        let weekDayNum = Calendar.current.component(.weekday, from: self)
+        let weekDayNum = calendar.component(.weekday, from: self)
         let weekDay = DayOfWeek(rawValue: weekDayNum)!
         return weekDay
     }
@@ -191,6 +199,8 @@ extension Date {
     func getTimeIgnoreSecondsFormat() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
+        formatter.timeZone = TimeZone(identifier: "America/Los_Angeles")
+        formatter.locale = Locale(identifier: "en_US")
         return formatter.string(from: self)
     }
 
@@ -202,7 +212,7 @@ extension Date {
 
     static let components: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second, .weekday]
     private var dateComponents: DateComponents {
-        return  Calendar.current.dateComponents(Date.components, from: self)
+        return  calendar.dateComponents(Date.components, from: self)
     }
 
     var year: Int { return dateComponents.year! }
@@ -215,7 +225,7 @@ extension Date {
     var weekday: Int { return dateComponents.weekday! }
 
     func set(year: Int?=nil, month: Int?=nil, day: Int?=nil, hour: Int?=nil, minute: Int?=nil, second: Int?=nil, tz: String?=nil) -> Date {
-        let timeZone = Calendar.current.timeZone
+        let timeZone = TimeZone(identifier: "America/Los_Angeles")
         let year = year ?? self.year
         let month = month ?? self.month
         let day = day ?? self.day
@@ -223,7 +233,7 @@ extension Date {
         let minute = minute ?? self.minute
         let second = second ?? self.second
         let dateComponents = DateComponents(timeZone: timeZone, year: year, month: month, day: day, hour: hour, minute: minute, second: second)
-        let date = Calendar.current.date(from: dateComponents)
+        let date = calendar.date(from: dateComponents)
         return date!
     }
 }

@@ -60,7 +60,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
     var currentTimeComponents: DateComponents {
         if cachedCurrentTimeComponents[0] == nil {
-            cachedCurrentTimeComponents[0] = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
+            cachedCurrentTimeComponents[0] = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
         }
         return cachedCurrentTimeComponents[0]!
     }
@@ -84,6 +84,16 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
     weak var delegate: WeekViewFlowLayoutDelegate?
     private var minuteTimer: Timer?
+    
+    
+    var calendar: Calendar {
+        guard let timeZone =  TimeZone(identifier: "America/Los_Angeles") else { return Calendar.current }
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        calendar.locale = Locale(identifier: "en_US")
+        return calendar
+    }
+
 
     // Default UI parameters Initializer
     override init() {
@@ -316,7 +326,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             let endMinuteY = CGFloat(itemEndTime.minute!) * minuteHeight
 
             if itemEndTime.day! != itemStartTime.day! {
-                endHourY = CGFloat(Calendar.current.maximumRange(of: .hour)!.count) * hourHeight + CGFloat(itemEndTime.hour!) * hourHeight
+                endHourY = CGFloat(calendar.maximumRange(of: .hour)!.count) * hourHeight + CGFloat(itemEndTime.hour!) * hourHeight
             } else {
                 endHourY = CGFloat(itemEndTime.hour!) * hourHeight
             }
@@ -730,8 +740,8 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
         let day = delegate?.collectionView(collectionView!, layout: self, dayForSection: section)
         guard day != nil else { fatalError() }
-        let startOfDay = Calendar.current.startOfDay(for: day!)
-        let dayDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: startOfDay)
+        let startOfDay = calendar.startOfDay(for: day!)
+        let dayDateComponents = calendar.dateComponents([.year, .month, .day], from: startOfDay)
         cachedDayDateComponents[section] = dayDateComponents
         return dayDateComponents
     }
@@ -741,7 +751,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             return cachedStartTimeDateComponents[indexPath]!
         } else {
             if let date = delegate?.collectionView(collectionView!, layout: self, startTimeForItemAtIndexPath: indexPath) {
-                cachedStartTimeDateComponents[indexPath] = Calendar.current.dateComponents([.day, .hour, .minute], from: date)
+                cachedStartTimeDateComponents[indexPath] = calendar.dateComponents([.day, .hour, .minute], from: date)
                 return cachedStartTimeDateComponents[indexPath]!
             } else {
                 fatalError()
@@ -754,7 +764,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             return cachedEndTimeDateComponents[indexPath]!
         } else {
             if let date = delegate?.collectionView(collectionView!, layout: self, endTimeForItemAtIndexPath: indexPath) {
-                cachedEndTimeDateComponents[indexPath] = Calendar.current.dateComponents([.day, .hour, .minute], from: date)
+                cachedEndTimeDateComponents[indexPath] = calendar.dateComponents([.day, .hour, .minute], from: date)
                 return cachedEndTimeDateComponents[indexPath]!
             } else {
                 fatalError()
@@ -765,12 +775,12 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     open func timeForRowHeader(at indexPath: IndexPath) -> Date {
         var components = daysForSection(indexPath.section)
         components.hour = indexPath.item
-        return Calendar.current.date(from: components)!
+        return calendar.date(from: components)!
     }
 
     open func dateForColumnHeader(at indexPath: IndexPath) -> Date {
         let day = delegate?.collectionView(collectionView!, layout: self, dayForSection: indexPath.section)
-        return Calendar.current.startOfDay(for: day!)
+        return calendar.startOfDay(for: day!)
     }
 
     // MARK: - z index
