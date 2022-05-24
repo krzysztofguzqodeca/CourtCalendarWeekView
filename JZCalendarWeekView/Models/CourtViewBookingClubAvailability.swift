@@ -21,11 +21,11 @@ open class CourtViewBookingClubAvailability: Codable {
 
 // MARK: - Availability
 open class ItemAvailability: Codable {
-    let fromInMinutes, toInMinutes: Int?
-    let timeOfDay: String?
-    let courtsVersionsIDS: [String]?
-    let unavailability: ItemUnavailability?
-    let courtID: String?
+    public let fromInMinutes, toInMinutes: Int?
+    public let timeOfDay: String?
+    public let courtsVersionsIDS: [String]?
+    public let unavailability: ItemUnavailability?
+    public let courtID: String?
 
     enum CodingKeys: String, CodingKey {
         case fromInMinutes, toInMinutes, timeOfDay

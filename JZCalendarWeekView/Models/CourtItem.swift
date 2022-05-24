@@ -15,7 +15,7 @@ open class CourtItem: Codable {
     let category, tennisCourtType, visibilityOption: CategoryType?
     let openingHours: [ItemOpeningHour]?
     let categoryOption: CategoryOption?
-    let availability: [ItemAvailability]?
+    public let availability: [ItemAvailability]?
 
     enum CodingKeys: String, CodingKey {
         case courtID = "courtId"
