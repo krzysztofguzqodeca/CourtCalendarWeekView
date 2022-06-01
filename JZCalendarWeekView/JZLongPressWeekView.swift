@@ -272,7 +272,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// Initialise the long press view with longPressTimeLabel.
     open func initLongPressView(selectedCell: UICollectionViewCell?, type: LongPressType, startDate: Date) -> UIView {
 
-        let longPressView = type == .move ? longPressDataSource!.weekView(self, movingCell: selectedCell!, viewForMoveLongPressAt: startDate) :
+        let longPressView = type == .move ? UIView() :
                                             longPressDataSource!.weekView(self, viewForAddNewLongPressAt: startDate)
         longPressView.clipsToBounds = false
 
