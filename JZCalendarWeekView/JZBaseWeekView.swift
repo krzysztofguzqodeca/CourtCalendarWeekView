@@ -124,7 +124,7 @@ open class JZBaseWeekView: UIView {
         super.layoutSubviews()
 
         if(numOfDays == nil) {numOfDays = 0}
-        flowLayout.sectionWidth = 161 //getSectionWidth()
+        flowLayout.sectionWidth = getSectionWidth()
         flowLayout.rowHeaderWidth = 40
 
     }
@@ -132,7 +132,7 @@ open class JZBaseWeekView: UIView {
     /// Was going to use toDecimal1Value as well, but the CGFloat is always got the wrong precision
     /// In order to make sure the width of all sections is the same, add few points to CGFloat
     private func getSectionWidth() -> CGFloat {
-//        var sectionWidth = contentViewWidth / CGFloat(numOfDays)
+        var sectionWidth = flowLayout.sectionWidth
 //        let remainder = sectionWidth.truncatingRemainder(dividingBy: 1)
 //        switch remainder {
 //        case 0...0.25:
@@ -142,11 +142,11 @@ open class JZBaseWeekView: UIView {
 //        default:
 //            sectionWidth = sectionWidth.rounded(.up)
 //        }
-        //var sectionWidth = 161.0
-        // Maximum added width for row header should be 0.25 * numberOfRows
-//        let rowHeaderWidth = frame.width - flowLayout.contentsMargin.left - flowLayout.contentsMargin.right - sectionWidth * CGFloat(numOfDays)
-       // flowLayout.rowHeaderWidth = 60
-        return 161.0
+        if (numOfDays == 1) {
+            sectionWidth = contentViewWidth
+        }
+        
+        return sectionWidth
     }
 
     /**
