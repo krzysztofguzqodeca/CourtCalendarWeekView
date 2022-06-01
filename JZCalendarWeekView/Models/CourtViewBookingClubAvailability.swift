@@ -173,8 +173,8 @@ open class TimeSlot: Codable {
 
 // MARK: - ItemOpeningHour
 open class ItemOpeningHour: Codable {
-    let dayOfWeek: String?
-    let openingHours: [OpeningHourOpeningHour]?
+    public let dayOfWeek: String?
+    public let openingHours: [OpeningHourOpeningHour]?
 
     init(dayOfWeek: String, openingHours: [OpeningHourOpeningHour]) {
         self.dayOfWeek = dayOfWeek
@@ -193,7 +193,7 @@ open class ItemOpeningHour: Codable {
 
 // MARK: - OpeningHourOpeningHour
 open class OpeningHourOpeningHour: Codable {
-    let fromInMinutes, toInMinutes: Int?
+    public let fromInMinutes, toInMinutes: Int?
 
     init(fromInMinutes: Int, toInMinutes: Int) {
         self.fromInMinutes = fromInMinutes

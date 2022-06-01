@@ -186,7 +186,7 @@ extension Date {
         return calendar.startOfDay(for: self)
     }
 
-    var endOfDay: Date {
+    public var endOfDay: Date {
         return self.set(hour: 23, minute: 59, second: 59)
     }
 
