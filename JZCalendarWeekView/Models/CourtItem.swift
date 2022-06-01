@@ -13,7 +13,7 @@ open class CourtItem: Codable {
     public let courtID, name, shortName, itemDescription: String?
     let ballMachine: Bool
     let category, tennisCourtType, visibilityOption: CategoryType?
-    let openingHours: [ItemOpeningHour]?
+    public let openingHours: [ItemOpeningHour]?
     let categoryOption: CategoryOption?
     public let availability: [ItemAvailability]?
 
