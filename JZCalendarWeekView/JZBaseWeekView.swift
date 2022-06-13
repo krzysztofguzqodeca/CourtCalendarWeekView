@@ -15,11 +15,17 @@ public protocol JZBaseViewDelegate: class {
     ///   - weekView: current JZBaseWeekView
     ///   - initDate: the new value of initDate
     func initDateDidChange(_ weekView: JZBaseWeekView, initDate: Date)
+    func presentAlert(title: String, message: String)
 }
 
 extension JZBaseViewDelegate {
     // Keep it optional
     func initDateDidChange(_ weekView: JZBaseWeekView, initDate: Date) {}
+}
+
+extension JZBaseViewDelegate {
+    // Keep it optional
+    func presentAlert(title: String, message: String) {}
 }
 
 open class JZBaseWeekView: UIView {
