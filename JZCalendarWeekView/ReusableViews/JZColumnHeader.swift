@@ -29,11 +29,12 @@ open class JZColumnHeader: UICollectionReusableView {
     private func setupUI() {
         // Hide all content when colum header height equals 0
         self.clipsToBounds = true
-        let stackView = UIStackView(arrangedSubviews: [lblWeekday, lblDay])
+        let stackView = UIStackView(arrangedSubviews: [lblDay, lblWeekday])
         stackView.axis = .vertical
-        stackView.spacing = 2
+        stackView.spacing = 3
         addSubview(stackView)
         stackView.setAnchorConstraintsEqualTo(centerXAnchor: centerXAnchor, centerYAnchor: centerYAnchor)
+        
         lblDay.textAlignment = .center
         lblWeekday.textAlignment = .center
         lblDay.font = UIFont.boldSystemFont(ofSize: 13)
@@ -59,6 +60,32 @@ open class JZColumnHeader: UICollectionReusableView {
         guard let court = court else { return }
         lblDay.text = "Court: \(court.shortName ?? "") \n"
         lblDay.textColor = UIColor.white
+    
+       
+        let fullString = NSMutableAttributedString(string: "")
+        let ballImageAttachment = NSTextAttachment()
+        if(court.ballMachine) {
+            ballImageAttachment.image = UIImage(named: "court_view_machine")
+        }
+        let courtImageAttachment = NSTextAttachment()
+        if(court.tennisCourtType?.code == "indoor") {
+            courtImageAttachment.image = UIImage(named: "court_view_indoor")
+        } else if(court.tennisCourtType?.code == "outdoor") {
+            courtImageAttachment.image = UIImage(named: "court_view_outdoor")
+        }
+        
+        if (courtImageAttachment.image != nil) {
+            let courtImageString = NSAttributedString(attachment: courtImageAttachment)
+            fullString.append(courtImageString)
+        }
+        
+        if (ballImageAttachment.image != nil) {
+            let space = NSAttributedString.init(string: "  ")
+            let ballImageString = NSAttributedString(attachment: ballImageAttachment)
+            fullString.append(space)
+            fullString.append(ballImageString)
+        }
+        lblWeekday.attributedText = fullString
     }
 
 }
