@@ -368,7 +368,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             let horizontalGridlineXOffset = calendarStartX
             let horizontalGridlineMinX = fmax(horizontalGridlineXOffset, collectionView!.contentOffset.x + horizontalGridlineXOffset)
             let horizontalGridlineMinY = (calendarStartY + (hourHeight * CGFloat(hour))) - (defaultGridThickness / 2.0).toDecimal1Value()
-            let horizontalGridlineWidth = fmin(calendarGridWidth, collectionView!.frame.width)
+            let horizontalGridlineWidth = fmax(calendarGridWidth, collectionView!.frame.width)
 
             attributes.frame = CGRect(x: horizontalGridlineMinX, y: horizontalGridlineMinY,
                                       width: horizontalGridlineWidth, height: defaultGridThickness)
