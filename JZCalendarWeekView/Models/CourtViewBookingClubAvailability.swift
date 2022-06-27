@@ -5,7 +5,7 @@ import Foundation
 // MARK: - CourtViewBookingClubAvailability
 open class CourtViewBookingClubAvailability: Codable {
     let canCreateBookings: Bool
-    let daysAheadLimit, maxAllowedTimeOfBookingInMinutes, minAllowedTimeOfBookingInMinutes: Int?
+    public let daysAheadLimit, maxAllowedTimeOfBookingInMinutes, minAllowedTimeOfBookingInMinutes: Int?
     let isAfterMaxAllowedBookingDate: Bool
     public let items: [CourtItem]?
 
