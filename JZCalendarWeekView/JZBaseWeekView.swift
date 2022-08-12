@@ -384,6 +384,23 @@ open class JZBaseWeekView: UIView {
         let minute = Int((adjustedY / flowLayout.hourHeight - CGFloat(hour)) * 60)
         return (hour, minute)
     }
+    
+    open func getContentOffsetYForDate(_ date: Date) -> (CGFloat) {
+        let hour = calendar.component(.hour, from: date)
+        let minute = calendar.component(.minute, from: date)
+        let minuteY = (flowLayout.hourHeight / CGFloat(60)) * CGFloat(minute)
+        let contentOffsetY = (CGFloat(hour) * flowLayout.hourHeight) + minuteY + flowLayout.defaultColumnHeaderHeight + flowLayout.contentsMargin.top
+        return contentOffsetY
+    }
+    
+    open func addDisableDaysAheadView() {
+        let contentOffsetY = getContentOffsetYForDate(Date())
+        let disableDaysAheadView = DisableDaysAheadView.init(frame: CGRect(x: 48, y: contentOffsetY, width: 5000, height: 5000))
+        
+        collectionView.addSubview(disableDaysAheadView)
+        collectionView.bringSubviewToFront(disableDaysAheadView)
+    }
+    
 
     /**
      Get full date from **collectionView contentOffset only** rather than gesture point in collectionView
