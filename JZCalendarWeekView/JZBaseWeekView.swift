@@ -32,6 +32,7 @@ open class JZBaseWeekView: UIView {
 
     public var collectionView: JZCollectionView!
     public var flowLayout: JZWeekViewFlowLayout!
+    var disableDaysAheadView: DisableDaysAheadView?
 
     /**
      - The initial date of current collectionView. When page is not scrolling, the inital date is always
@@ -395,12 +396,16 @@ open class JZBaseWeekView: UIView {
     
     open func addDisableDaysAheadView() {
         let contentOffsetY = getContentOffsetYForDate(Date())
-        let disableDaysAheadView = DisableDaysAheadView.init(frame: CGRect(x: 48, y: contentOffsetY, width: 5000, height: 5000))
+        disableDaysAheadView = DisableDaysAheadView.init(frame: CGRect(x: 48, y: contentOffsetY, width: 5000, height: 5000))
         
+        guard let disableDaysAheadView = disableDaysAheadView else { return }
         collectionView.addSubview(disableDaysAheadView)
         collectionView.bringSubviewToFront(disableDaysAheadView)
     }
     
+    open func removeDisableDaysAheadView() {
+        disableDaysAheadView?.removeFromSuperview()
+    }
 
     /**
      Get full date from **collectionView contentOffset only** rather than gesture point in collectionView
