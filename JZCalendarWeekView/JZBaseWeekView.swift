@@ -404,7 +404,7 @@ open class JZBaseWeekView: UIView {
     }
     
     open func removeDisableDaysAheadView() {
-        disableDaysAheadView?.removeFromSuperview()
+        collectionView.subviews.forEach({ $0.removeFromSuperview() })
     }
 
     /**
