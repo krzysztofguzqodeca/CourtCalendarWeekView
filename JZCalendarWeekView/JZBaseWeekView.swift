@@ -188,7 +188,9 @@ open class JZBaseWeekView: UIView {
         self.scrollableRange.endDate = nil //scrollableRange?.endDate
         self.currentTimelineType = currentTimelineType
 
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
             // Check the screen orientation when initialisation
             JZWeekViewHelper.viewTransitionHandler(to: UIScreen.main.bounds.size, weekView: self, needRefresh: false)
             self.layoutSubviews()
@@ -292,7 +294,8 @@ open class JZBaseWeekView: UIView {
     ///    - date: this date is the current date in one-day view rather than initDate
     open func updateWeekView(to date: Date) {
         self.initDate = date.startOfDay.add(component: .day, value: 0)
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             self.layoutSubviews()
             self.forceReload()
         }
