@@ -9,7 +9,8 @@
 import UIKit
 
 public protocol JZLongPressViewDelegate: class {
-
+    func weekView(_ weekView: JZCalendarWeekView.JZLongPressWeekView, shouldHandleLongPressAt startDate: Date, indexPath: IndexPath?) -> Bool
+    
     /// When addNew long press gesture ends, this function will be called.
     /// You should handle what should be done after creating a new event.
     /// - Parameters:
@@ -54,6 +55,10 @@ public protocol JZLongPressViewDataSource: class {
 }
 
 extension JZLongPressViewDelegate {
+    func weekView(_ weekView: JZCalendarWeekView.JZLongPressWeekView, shouldHandleLongPressAt startDate: Date, indexPath: IndexPath?) -> Bool {
+        return true
+    }
+    
     // Keep them optional
     public func weekView(_ weekView: JZLongPressWeekView, longPressType: JZLongPressWeekView.LongPressType, didCancelLongPressAt startDate: Date) {}
     public func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date) {}
@@ -272,7 +277,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// Initialise the long press view with longPressTimeLabel.
     open func initLongPressView(selectedCell: UICollectionViewCell?, type: LongPressType, startDate: Date) -> UIView {
 
-        let longPressView = type == .move ? UIView() :
+        let longPressView = type == .move ? longPressDataSource!.weekView(self, movingCell: selectedCell!, viewForMoveLongPressAt: startDate) :
                                             longPressDataSource!.weekView(self, viewForAddNewLongPressAt: startDate)
         longPressView.clipsToBounds = false
 
@@ -424,11 +429,24 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
         }
 
         if state == .began {
-
             currentEditingInfo.cellSize = currentLongPressType == .move ? currentMovingCell.frame.size : CGSize(width: flowLayout.sectionWidth, height: flowLayout.hourHeight * CGFloat(addNewDurationMins)/60)
             pressPosition = currentLongPressType == .move ? (pointInCollectionView.x - currentMovingCell.frame.origin.x, pointInCollectionView.y - currentMovingCell.frame.origin.y) :
                                                             (currentEditingInfo.cellSize.width/2, currentEditingInfo.cellSize.height/2)
+            
             longPressViewStartDate = getLongPressViewStartDate(pointInCollectionView: pointInCollectionView, pointInSelfView: pointInSelfView)
+            
+            if let startDate = longPressViewStartDate {
+                let section = getSectionForPointX(pointInCollectionView.x)
+                let indexPath = collectionView.indexPathForItem(at: pointInCollectionView)
+                let handle = longPressDelegate?.weekView(self, shouldHandleLongPressAt: longPressViewStartDate, indexPath: indexPath) ?? true
+                if !handle {
+                    longPressTimeLabel.removeFromSuperview()
+                    isLongPressing = false
+                    pressPosition = nil
+                    return
+                }
+            }
+
             longPressView = initLongPressView(selectedCell: currentMovingCell, type: currentLongPressType, startDate: longPressViewStartDate)
             longPressView.frame.size = currentEditingInfo.cellSize
             longPressView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
@@ -448,12 +466,13 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
                            animations: { self.longPressView.transform = CGAffineTransform.identity }, completion: nil)
 
         } else if state == .changed {
+            guard pressPosition != nil else { return }
+            
             let topYPoint = max(pointInSelfView.y - pressPosition!.yToViewTop, longPressTopMarginY)
             longPressView.center = CGPoint(x: pointInSelfView.x - pressPosition!.xToViewLeft + currentEditingInfo.cellSize.width/2,
                                            y: topYPoint + currentEditingInfo.cellSize.height/2)
 
         } else if state == .cancelled {
-
             UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
                 self.longPressView.alpha = 0
             }, completion: { _ in
@@ -462,13 +481,17 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
             longPressDelegate?.weekView(self, longPressType: currentLongPressType, didCancelLongPressAt: longPressViewStartDate)
 
         } else if state == .ended {
-
-            self.longPressView.removeFromSuperview()
-            if currentLongPressType == .addNew {
-                let section = getSectionForPointX(pointInCollectionView.x)
-                longPressDelegate?.weekView(self, didEndAddNewLongPressAt: longPressViewStartDate, section: section)
-            } else if currentLongPressType == .move {
-                longPressDelegate?.weekView(self, editingEvent: currentEditingInfo.event, didEndMoveLongPressAt: longPressViewStartDate)
+            if let _ = longPressView {
+                self.longPressView.removeFromSuperview()
+            }
+            
+            if let startDate = longPressViewStartDate {
+                if currentLongPressType == .addNew {
+                    let section = getSectionForPointX(pointInCollectionView.x)
+                    longPressDelegate?.weekView(self, didEndAddNewLongPressAt: startDate, section: section)
+                } else if let event = currentEditingInfo.event, currentLongPressType == .move {
+                    longPressDelegate?.weekView(self, editingEvent: event, didEndMoveLongPressAt: startDate)
+                }
             }
         }
 
