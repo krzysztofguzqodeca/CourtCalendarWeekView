@@ -398,14 +398,22 @@ open class JZBaseWeekView: UIView {
     }
     
     open func addDisableDaysAheadView() {
-        let contentOffsetY = getContentOffsetYForDate(Date())
+        addLockView(offset: getContentOffsetYForDate(Date()))
+    }
+    
+    open func lock() {
+        addLockView(offset: 0)
+    }
+    
+    private func addLockView(offset: CGFloat) {
+        let contentOffsetY = 0
         disableDaysAheadView = DisableDaysAheadView.init(frame: CGRect(x: 48, y: contentOffsetY, width: 5000, height: 5000))
         
         guard let disableDaysAheadView = disableDaysAheadView else { return }
         collectionView.addSubview(disableDaysAheadView)
         collectionView.bringSubviewToFront(disableDaysAheadView)
     }
-    
+
     open func removeDisableDaysAheadView() {
         collectionView.subviews.forEach({ $0.removeFromSuperview() })
     }
