@@ -402,12 +402,13 @@ open class JZBaseWeekView: UIView {
     }
     
     open func lock() {
-        addLockView(offset: 0)
+        addLockView(offset: flowLayout.defaultColumnHeaderHeight)
     }
     
     private func addLockView(offset: CGFloat) {
-        let contentOffsetY = 0
-        disableDaysAheadView = DisableDaysAheadView.init(frame: CGRect(x: 48, y: contentOffsetY, width: 5000, height: 5000))
+        disableDaysAheadView?.removeFromSuperview()
+        
+        disableDaysAheadView = DisableDaysAheadView.init(frame: CGRect(x: 48, y: offset, width: 5000, height: 5000))
         
         guard let disableDaysAheadView = disableDaysAheadView else { return }
         collectionView.addSubview(disableDaysAheadView)
@@ -415,7 +416,7 @@ open class JZBaseWeekView: UIView {
     }
 
     open func removeDisableDaysAheadView() {
-        collectionView.subviews.forEach({ $0.removeFromSuperview() })
+        disableDaysAheadView?.removeFromSuperview()
     }
 
     /**
@@ -783,3 +784,4 @@ extension JZBaseWeekView: WeekViewFlowLayoutDelegate {
         return JZSupplementaryViewKinds.eventCell
     }
 }
+
