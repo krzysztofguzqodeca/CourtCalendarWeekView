@@ -55,8 +55,8 @@ open class ItemAvailability: Codable {
 
 // MARK: - Unavailability
 open class ItemUnavailability: Codable {
-    let reason, message: String?
-    let bookingStarts: BookingStarts?
+    public let reason, message: String?
+    public let bookingStarts: BookingStarts?
 
     init(reason: String, message: String, bookingStarts: BookingStarts) {
         self.reason = reason
