@@ -243,5 +243,13 @@ extension CGFloat {
     func toDecimal1Value() -> CGFloat {
         return (self * 10).rounded() / 10
     }
+}
 
+extension Array {
+    public subscript(safe index: Int) -> Element? {
+        guard index >= 0, index < endIndex else {
+            return nil
+        }
+        return self[index]
+    }
 }

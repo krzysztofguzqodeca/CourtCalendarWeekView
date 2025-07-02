@@ -320,7 +320,10 @@ open class JZBaseWeekView: UIView {
     ///
     /// - Parameter indexPath: The indexPath of an item in collectionView
     open func getCurrentEvent(with indexPath: IndexPath) -> JZBaseEvent? {
-        return allEventsBySectionInt[indexPath.section]?[indexPath.row]
+        guard let items = allEventsBySectionInt[indexPath.section] else { return nil }
+        guard let item = items[safe: indexPath.section] else { return nil }
+        
+        return item
     }
 
     open func getDatesInCurrentPage(isScrolling: Bool) -> [Date] {
