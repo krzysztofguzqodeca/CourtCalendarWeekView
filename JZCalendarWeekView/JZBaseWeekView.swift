@@ -321,7 +321,7 @@ open class JZBaseWeekView: UIView {
     /// - Parameter indexPath: The indexPath of an item in collectionView
     open func getCurrentEvent(with indexPath: IndexPath) -> JZBaseEvent? {
         guard let items = allEventsBySectionInt[indexPath.section] else { return nil }
-        guard let item = items[safe: indexPath.section] else { return nil }
+        guard let item = items[safe: indexPath.row] else { return nil }
         
         return item
     }
