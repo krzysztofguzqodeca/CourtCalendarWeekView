@@ -179,10 +179,9 @@ open class JZBaseWeekView: UIView {
                             visibleTime: Date = Date(),
                             scrollableRange: (startDate: Date?, endDate: Date?)? = (nil, nil)) {
 
-        self.numOfDays = numOfDays
+        
         self.initDate = setDate.startOfDay.add(component: .day, value: 0)
-        self.allEventsBySectionInt = allEvents
-        self.allSections = allSections
+
         self.scrollType = scrollType
         self.scrollableRange.startDate = scrollableRange?.startDate
         self.scrollableRange.endDate = nil //scrollableRange?.endDate
@@ -194,6 +193,10 @@ open class JZBaseWeekView: UIView {
             // Check the screen orientation when initialisation
             JZWeekViewHelper.viewTransitionHandler(to: UIScreen.main.bounds.size, weekView: self, needRefresh: false)
             self.layoutSubviews()
+            
+            self.numOfDays = numOfDays
+            self.allEventsBySectionInt = allEvents
+            self.allSections = allSections
             self.forceReload(reloadEvents: allEvents)
 
             if self.isFirstAppear {
@@ -257,15 +260,11 @@ open class JZBaseWeekView: UIView {
     /// - Parameters:
     ///   - reloadEvents: If provided new events, current events will be reloaded. Default value is nil.
     open func forceReload(reloadEvents: [Int: [JZBaseEvent]]? = nil) {
-        if let events = reloadEvents { self.allEventsBySectionInt = events }
-
-        DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self else { return }
-            //strongSelf.updateAllDayBar(isScrolling: false)
-            strongSelf.flowLayout.invalidateLayoutCache()
-            strongSelf.collectionView.reloadData()
-            strongSelf.setHorizontalEdgesOffsetX()
-        }
+        guard let events = reloadEvents else { return }
+        allEventsBySectionInt = events
+        flowLayout.invalidateLayoutCache()
+        collectionView.reloadData()
+        setHorizontalEdgesOffsetX()
     }
 
     /// Notice: A temporary solution to fix the scroll from bottom issue when isScrolling
