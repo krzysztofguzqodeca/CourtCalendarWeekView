@@ -11,13 +11,13 @@ import UIKit
 /// cannot change for now, will implement theme in the future
 class JZWeekViewColors {
 
-    class var columnHeaderWeekday: UIColor { return UIColor(hexString: "#1C1C1E") }
-    class var columnHeaderDay: UIColor { return UIColor(hexString: "#1C1C1E") }
+    class var columnHeaderWeekday: UIColor { return UIColor(hexString: "#1C355E") }
+    class var columnHeaderDay: UIColor { return UIColor(hexString: "#1C355E") }
     class var allDayHeader: UIColor { return UIColor(hex: 0x757575) }
     class var rowHeaderTime: UIColor { return UIColor(hexString: "#A6AAAE") }
     class var gridLine: UIColor { return UIColor(hexString: "#EDEEEF") }
-    class var columnHeaderBackgroundColor: UIColor { return UIColor(hexString: "#1C1C1E") }
-    class var rowsBackgroundColor: UIColor { return UIColor(hexString: "#494949") }
+    class var columnHeaderBackgroundColor: UIColor { return UIColor(hexString: "#1C355E") }
+    class var rowsBackgroundColor: UIColor { return UIColor(hexString: "#1F4366") }
 
     class var today: UIColor { return UIColor(hexString: "#F26C5A") }
     class var appleCalendarRed: UIColor { return UIColor(hex: 0xFC3D39) }
