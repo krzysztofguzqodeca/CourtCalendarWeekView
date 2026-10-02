@@ -473,12 +473,16 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
                                            y: topYPoint + currentEditingInfo.cellSize.height/2)
 
         } else if state == .cancelled {
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
-                self.longPressView.alpha = 0
-            }, completion: { _ in
-                self.longPressView.removeFromSuperview()
-            })
-            longPressDelegate?.weekView(self, longPressType: currentLongPressType, didCancelLongPressAt: longPressViewStartDate)
+            if let longPressView = longPressView {
+                UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
+                    longPressView.alpha = 0
+                }, completion: { _ in
+                    longPressView.removeFromSuperview()
+                })
+            }
+            if let startDate = longPressViewStartDate {
+                longPressDelegate?.weekView(self, longPressType: currentLongPressType, didCancelLongPressAt: startDate)
+            }
 
         } else if state == .ended {
             if let _ = longPressView {
