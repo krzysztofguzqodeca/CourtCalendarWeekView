@@ -346,11 +346,10 @@ open class JZLongPressWeekView: JZBaseWeekView {
 
     /// Use the event id to check the cell item is the original cell
     private func isOriginalMovingCell(_ cell: UICollectionViewCell) -> Bool {
-        if let cell = cell as? JZLongPressEventCell {
-            return cell.event.id == currentEditingInfo.event.id
-        } else {
-            return false
-        }
+        guard let cell = cell as? JZLongPressEventCell,
+                    let cellEvent = cell.event,
+                    let movingEvent = currentEditingInfo.event else { return false }
+              return cellEvent.id == movingEvent.id
     }
 
      /*** Because of reusability, we set some cell contentViews to translucent, then when those views are reused, if you don't scroll back
@@ -409,7 +408,7 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
         let state = gestureRecognizer.state
         var currentMovingCell: UICollectionViewCell!
 
-        if isLongPressing == false {
+        if state == .began && isLongPressing == false {
             if let indexPath = collectionView.indexPathForItem(at: pointInCollectionView) {
                 // Can add some conditions for allowing only few types of cells can be moved
                 currentLongPressType = .move
