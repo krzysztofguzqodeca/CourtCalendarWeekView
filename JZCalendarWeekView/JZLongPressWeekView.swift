@@ -427,7 +427,7 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
             longPressViewStartDate = getLongPressViewStartDate(pointInCollectionView: pointInCollectionView, pointInSelfView: pointInSelfView)
         }
 
-        if state == .began && isLongPressing == false {
+        if state == .began {
             currentEditingInfo.cellSize = currentLongPressType == .move ? currentMovingCell.frame.size : CGSize(width: flowLayout.sectionWidth, height: flowLayout.hourHeight * CGFloat(addNewDurationMins)/60)
             pressPosition = currentLongPressType == .move ? (pointInCollectionView.x - currentMovingCell.frame.origin.x, pointInCollectionView.y - currentMovingCell.frame.origin.y) :
                                                             (currentEditingInfo.cellSize.width/2, currentEditingInfo.cellSize.height/2)
